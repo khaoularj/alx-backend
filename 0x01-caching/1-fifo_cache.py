@@ -21,13 +21,13 @@ class FIFOCache(BaseCaching):
         if key is None or item is None:
             return
 
-        else:
+        elif key and item:
             if self.cache_data.get(key):
                 self.queue.remove(key)
             self.queue.append(key)
             self.cache_data[key] = item
 
-            if len(self.cache_data) >= self.MAX_ITEMS:
+            if len(self.cache_data) > self.MAX_ITEMS:
                 old_key = self.queue.pop(0)
                 self.cache_data.pop(old_key)
                 print('DISCARD: {}'.format(old_key))
