@@ -9,11 +9,13 @@ app = Flask(__name__)
 app.config.from_object(Config)
 babel = Babel(app)
 
+
 @babel.localeselector
 def get_locale():
     """function that determine the best
     match with our supported languages"""
     return request.accept_languages.best_match(Config.LANGUAGES)
+
 
 @app.route('/')
 def Hello():
