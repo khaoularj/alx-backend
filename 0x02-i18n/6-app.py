@@ -24,7 +24,7 @@ users = {
 @app.route('/')
 def Hello():
     """this is the home page"""
-    return render_template('5-index.html')
+    return render_template('6-index.html')
 
 
 @babel.localeselector
@@ -34,6 +34,10 @@ def get_locale():
     locale = request.args.get('locale')
     if locale in Config.LANGUAGES:
         return locale
+
+    user = g.get('user')
+    if user and user.get('locale') in Config.LANGUAGES:
+        return user.get('locale')
     return request.accept_languages.best_match(Config.LANGUAGES)
 
 
