@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ _('logged_in_as' if g.user else 'not_logged_in') }} - Holberton</title>
+</head>
+<body>
+    <p>
+        {% if g.user %}
+            {{ _('logged_in_as') % {'username': g.user['name']} }}
+        {% else %}
+            {{ _('not_logged_in') }}
+        {% endif %}
+    </p>
+</body>
+</html>
