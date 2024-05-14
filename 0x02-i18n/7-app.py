@@ -3,6 +3,7 @@
 from flask import Flask, render_template, request, g
 from flask_babel import Babel
 from config import Config
+from pytz import timezone
 
 
 app = Flask(__name__)
@@ -24,7 +25,7 @@ users = {
 @app.route('/')
 def Hello():
     """this is the home page"""
-    return render_template('5-index.html')
+    return render_template('6-index.html')
 
 
 @babel.localeselector
@@ -34,6 +35,10 @@ def get_locale():
     locale = request.args.get('locale')
     if locale in Config.LANGUAGES:
         return locale
+
+    user = g.get('user')
+    if user and user.get('locale') in Config.LANGUAGES:
+        return user.get('locale')
     return request.accept_languages.best_match(Config.LANGUAGES)
 
 
@@ -49,6 +54,27 @@ def get_user():
 def before_request():
     """function that stores user infos"""
     g.user = get_user()
+
+
+@babel.timezoneselector
+def get_timezone():
+    """timezone function"""
+    timezone = request.args.get('timezone')
+    if timezone:
+        try:
+            pytz.timezone(timezone)
+            return timezone
+        except pytz.exceptions.UnknownTimeZoneError:
+            pass
+
+    user = g.get('user')
+    if user and user.get('timezone'):
+        try:
+            pytz.timezone(user.get('timezone'))
+            return user.get('timezone')
+        except pytz.exceptions.UnknownTimeZoneError:
+            pass
+    return Config.BABEL_DEFAULT_TIMEZONE
 
 
 if __name__ == '__main__':
